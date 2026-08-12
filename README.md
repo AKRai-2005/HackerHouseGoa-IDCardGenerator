@@ -23,6 +23,9 @@ straight to X.
 
 ## Features
 
+- **Two formats** — a landscape boarding pass and a portrait builder ID card, switchable in one click
+- **Scannable QR + barcode** — a real QR and a real Code 128 barcode, not decorative bars
+- **Unique builder IDs** — `#HH-GOA-0000` derived from the name, so the same person always gets the same ID
 - **Instant** — the pass renders live while you type; no loading screen, no round trip
 - **Real photos welcome** — portrait, landscape, square or panoramic, all fitted without distortion
 - **iPhone HEIC support** — converted in-browser, decoder loaded only when needed
@@ -54,7 +57,14 @@ bottom off the pass.
 .
 ├── frame-generator/     React + Vite frontend — the generator itself
 │   └── src/
-│       ├── lib/         canvas drawing, image decoding, share logic
+│       ├── lib/
+│       │   ├── drawPass.js   landscape boarding pass
+│       │   ├── drawCard.js   portrait ID card (QR + barcode)
+│       │   ├── code128.js    Code 128 barcode encoder
+│       │   ├── builderId.js  derived builder ID and class
+│       │   ├── formats.js    format registry
+│       │   ├── image.js      file -> ImageBitmap (HEIC, EXIF)
+│       │   └── share.js      upload + X intent
 │       └── components/  UI
 └── backend/             Express service for share links + OG previews
     └── src/

@@ -5,7 +5,9 @@ import UploadSection from './components/UploadSection';
 import CanvasPreview from './components/CanvasPreview';
 import ShareModal from './components/ShareModal';
 import { createShareLink, tweetIntent, toBlob, isLocalOrigin } from './lib/share';
-import { drawPass, passText } from './lib/drawPass';
+import { passText } from './lib/drawPass';
+import { FORMATS, DEFAULT_FORMAT } from './lib/formats';
+import { builderMeta } from './lib/builderId';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -14,7 +16,10 @@ export default function App() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [sharing, setSharing] = useState(false);
   const [share, setShare] = useState({ open: false, preview: null, file: null });
+  const [format, setFormat] = useState(DEFAULT_FORMAT);
   const canvasRef = useRef(null);
+
+  const spec = FORMATS[format];
 
   const [formData, setFormData] = useState({
     name: '',
@@ -33,17 +38,22 @@ export default function App() {
       .replace(/[^A-Z0-9]+/g, '_')
       .replace(/^_|_$/g, '') || 'BUILDER';
 
+  const meta = builderMeta(formData.name);
+  const shareUrl = window.location.origin;
+
   // The preview scrambles text into place over ~12 frames. Exporting has to be
   // independent of where that animation happens to be — and of whether rAF is
   // being throttled — so both exports repaint with the settled text first.
   const renderFinal = () => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
-    drawPass(canvas.getContext('2d'), {
+    spec.draw(canvas.getContext('2d'), {
       image,
       zoom,
       offset,
       text: passText(formData),
+      meta,
+      shareUrl,
     });
     return canvas;
   };
@@ -55,7 +65,7 @@ export default function App() {
       if (!blob) return;
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.download = `HH_GOA_2026_${slug()}_PASS.png`;
+      link.download = `HH_GOA_2026_${slug()}_${format.toUpperCase()}.png`;
       link.href = url;
       link.click();
       URL.revokeObjectURL(url);
@@ -142,6 +152,8 @@ export default function App() {
             onDownload={handleDownload}
             onShare={openShare}
             sharing={sharing}
+            format={format}
+            setFormat={setFormat}
           />
         </section>
 
@@ -154,6 +166,9 @@ export default function App() {
             setOffset={setOffset}
             formData={formData}
             canvasRef={canvasRef}
+            spec={spec}
+            meta={meta}
+            shareUrl={shareUrl}
           />
         </section>
       </main>

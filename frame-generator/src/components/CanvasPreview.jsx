@@ -1,10 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { drawPass, passText, photoRect, PASS_W, PASS_H } from '../lib/drawPass';
+import { passText, photoRect } from '../lib/drawPass';
 
 const SCRAMBLE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#$%&*@';
 const SCRAMBLE_FRAMES = 12;
 
-export default function CanvasPreview({ image, zoom = 1, offset, setOffset, formData, canvasRef }) {
+export default function CanvasPreview({
+  image,
+  zoom = 1,
+  offset,
+  setOffset,
+  formData,
+  canvasRef,
+  spec,
+  meta,
+  shareUrl,
+}) {
   const target = passText(formData);
   const [text, setText] = useState(target);
   const drag = useRef(null);
@@ -47,23 +57,25 @@ export default function CanvasPreview({ image, zoom = 1, offset, setOffset, form
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    if (canvas.width !== PASS_W) {
-      canvas.width = PASS_W;
-      canvas.height = PASS_H;
+    if (canvas.width !== spec.w) {
+      canvas.width = spec.w;
+      canvas.height = spec.h;
     }
 
-    drawPass(canvas.getContext('2d'), { image, zoom, offset, text });
-  }, [image, zoom, offset, text, canvasRef]);
+    spec.draw(canvas.getContext('2d'), { image, zoom, offset, text, meta, shareUrl });
+  }, [image, zoom, offset, text, meta, shareUrl, spec, canvasRef]);
 
   // Drag the photo inside its frame — phone snaps are rarely centred, and the
   // zoom slider alone can't fix that.
   const canPan = () => {
     if (!image) return false;
+    // The pass crops harder than the card, so use whichever frame allows least
+    // movement; that keeps dragging honest on both.
     const r = photoRect(image, zoom, offset);
-    return r.limitX > 0.5 || r.limitY > 0.5;
+    return r.limitX > 0.5 || r.limitY > 0.5 || zoom > 1;
   };
 
-  const scaleOf = (canvas) => PASS_W / canvas.getBoundingClientRect().width;
+  const scaleOf = (canvas) => spec.w / canvas.getBoundingClientRect().width;
 
   const onPointerDown = (e) => {
     if (!canPan()) return;

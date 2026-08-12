@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Upload, Download, Share2, ZoomIn, RefreshCw } from 'lucide-react';
 import { decodeImageFile } from '../lib/image';
+import { FORMATS } from '../lib/formats';
 
 export default function UploadSection({
   image,
@@ -13,6 +14,8 @@ export default function UploadSection({
   onDownload,
   onShare,
   sharing,
+  format,
+  setFormat,
 }) {
   const [status, setStatus] = useState(null);
 
@@ -56,6 +59,28 @@ export default function UploadSection({
 
   return (
     <div className="space-y-4">
+      <div className="space-y-2">
+        <label className="block text-xs font-mono font-bold text-[#0B3B2B] uppercase">
+          Format
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {Object.entries(FORMATS).map(([key, { label }]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFormat(key)}
+              className={`py-2 px-3 rounded-xl text-[11px] font-mono font-black border-2 transition-all cursor-pointer ${
+                format === key
+                  ? 'bg-[#0B3B2B] border-[#0B3B2B] text-[#F5C518]'
+                  : 'bg-[#F5F0E6]/30 border-[#E5DEC9] text-[#0B3B2B] hover:bg-[#F5F0E6]'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="space-y-2">
         <label className="block text-xs font-mono font-bold text-[#0B3B2B] uppercase">
           Upload Photo

@@ -1,3 +1,5 @@
+import { drawBarcode } from './code128';
+
 export const PASS_W = 1200;
 export const PASS_H = 800;
 
@@ -74,7 +76,7 @@ function field(ctx, label, value, x, y, highlight = false) {
   }
 }
 
-export function drawPass(ctx, { image, zoom, offset, text }) {
+export function drawPass(ctx, { image, zoom, offset, text, meta }) {
   ctx.fillStyle = CREAM_BG;
   ctx.fillRect(0, 0, PASS_W, PASS_H);
 
@@ -193,11 +195,13 @@ export function drawPass(ctx, { image, zoom, offset, text }) {
 
   ctx.fillStyle = DARK_GREEN;
   ctx.font = 'bold 18px monospace';
-  ctx.fillText('💻 CODE  •  🌊 CHILL  •  🛵 RIDE  •  🎲 PLAY  •  🌴 REPEAT', 80, 720);
+  ctx.fillText('💻 CODE  •  🌊 CHILL  •  🛵 RIDE  •  🎲 PLAY  •  🌴 REPEAT', 80, 718);
 
-  let bar = 940;
-  for (const w of [4, 2, 6, 2, 8, 3, 2, 5, 2, 7, 3, 2, 6, 2, 4, 8, 2, 5]) {
-    ctx.fillRect(bar, 688, w, 48);
-    bar += w + 3;
-  }
+  drawBarcode(ctx, meta.code, 762, 683, 380, 40, DARK_GREEN);
+  ctx.save();
+  ctx.fillStyle = DARK_GREEN;
+  ctx.font = 'bold 13px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`#${meta.id}`, 952, 741);
+  ctx.restore();
 }
