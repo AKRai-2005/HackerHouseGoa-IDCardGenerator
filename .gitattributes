@@ -1,0 +1,9 @@
+# Normalise line endings so Windows and Linux checkouts match
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.webp binary
+*.svg binary
+*.zip binary

@@ -1,0 +1,13 @@
+{
+  "name": "hh-goa-2026",
+  "private": true,
+  "description": "HH Goa 2026 builder pass generator — frontend + share service",
+  "scripts": {
+    "install:all": "npm --prefix frame-generator install && npm --prefix backend install",
+    "dev": "npm --prefix backend run dev",
+    "dev:web": "npm --prefix frame-generator run dev",
+    "build": "npm --prefix frame-generator run build",
+    "start": "npm --prefix backend start",
+    "lint": "npm --prefix frame-generator run lint"
+  }
+}

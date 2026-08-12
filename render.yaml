@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hh-goa-frame
+    runtime: node
+    plan: free
+    buildCommand: npm --prefix frame-generator ci && npm --prefix frame-generator run build && npm --prefix backend ci
+    startCommand: npm --prefix backend start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"

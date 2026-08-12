@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# Archives / backups (frame-generator.zip is a 49MB leftover)
+*.zip
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
