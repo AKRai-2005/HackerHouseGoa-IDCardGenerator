@@ -21,22 +21,6 @@ export const isLocalOrigin = () =>
   window.location.hostname.endsWith('.local');
 
 /**
- * True when the device can hand a real file to the X app. This attaches the
- * pass to the tweet directly, with no server and no link preview involved.
- */
-export const canAttachFile = (file) =>
-  Boolean(file && navigator.canShare?.({ files: [file] }));
-
-/** Must be called straight from the click — iOS rejects a deferred share(). */
-export const shareFile = (file) =>
-  navigator.share({
-    files: [file],
-    text:
-      `I am officially on board for Hacker House Goa 2026! 🌴⚡\n\n` +
-      `#FrameInGoa #HHGoa2026`,
-  });
-
-/**
  * Uploads the rendered pass and returns a public URL whose OG tags show the
  * pass itself — X's intent API can't attach an image, so the link preview is
  * the only way to get the graphic into the tweet.

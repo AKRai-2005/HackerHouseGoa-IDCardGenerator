@@ -34,14 +34,12 @@ straight to X.
 
 ## How the X share works
 
-X's tweet intent API **cannot attach an image**, so the pass reaches a tweet one
-of two ways:
+X's tweet intent API **cannot attach an image**, so the pass reaches the tweet as
+a link preview: the graphic is uploaded, and the tweet carries a short link whose
+Open Graph tags point at it, making the preview card *the pass itself*.
 
-1. **Native attach** — on phones that support file sharing, the pass is handed
-   directly to the X app and attached to the tweet. No server involved.
-2. **Link preview** — everywhere else the pass is uploaded, and the tweet carries
-   a short link whose Open Graph tags point at the graphic, so the preview card
-   *is* the pass.
+This keeps sharing to a single hop — clicking the option opens X directly, with
+no operating-system share sheet asking which app to use in between.
 
 The card is rendered as a separate 1200×630 letterboxed image, because X
 centre-crops `summary_large_image` previews and would otherwise slice the top and

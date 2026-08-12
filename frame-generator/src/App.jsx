@@ -4,14 +4,7 @@ import Navbar from './components/Navbar';
 import UploadSection from './components/UploadSection';
 import CanvasPreview from './components/CanvasPreview';
 import ShareModal from './components/ShareModal';
-import {
-  createShareLink,
-  tweetIntent,
-  toBlob,
-  canAttachFile,
-  shareFile,
-  isLocalOrigin,
-} from './lib/share';
+import { createShareLink, tweetIntent, toBlob, isLocalOrigin } from './lib/share';
 import { drawPass, passText } from './lib/drawPass';
 
 export default function App() {
@@ -69,8 +62,8 @@ export default function App() {
     }, 'image/png');
   };
 
-  // Prepared when the dialog opens, not when a choice is clicked: iOS only
-  // honours navigator.share() if it runs directly inside the click.
+  // Encoded when the dialog opens rather than on click, so the pass is already
+  // in hand when a choice is made and the upload starts immediately.
   const openShare = async () => {
     const canvas = renderFinal();
     if (!canvas) return;
@@ -95,23 +88,12 @@ export default function App() {
     else window.location.href = intent;
   };
 
+  // Always straight to X. The pass rides along as the link's preview card,
+  // which keeps this one hop — handing the file to the OS share sheet instead
+  // would make the user pick an app first.
   const shareWithCard = async () => {
     if (sharing) return;
 
-    // Where the device supports it, hand X the actual file — the pass is then
-    // attached to the tweet outright, with no server or link preview involved.
-    if (canAttachFile(share.file)) {
-      try {
-        await shareFile(share.file);
-        closeShare();
-        return;
-      } catch (err) {
-        if (err.name === 'AbortError') return; // user backed out of the sheet
-        console.error(err);
-      }
-    }
-
-    // Otherwise upload it and tweet a link whose preview renders the pass.
     const tab = window.open('', '_blank');
     setSharing(true);
     try {
@@ -181,7 +163,7 @@ export default function App() {
           preview={share.preview}
           ready={!!share.file}
           sharing={sharing}
-          localOnly={isLocalOrigin() && !canAttachFile(share.file)}
+          localOnly={isLocalOrigin()}
           onWithCard={shareWithCard}
           onWithoutCard={shareWithoutCard}
           onClose={closeShare}

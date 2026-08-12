@@ -55,10 +55,8 @@ never be pulled away from its frame.
 
 Share to X asks how you want to post:
 
-- **Post with my ID card.** On phones that support it the pass is handed
-  straight to the X app as a file, so it is attached to the tweet outright.
-  Everywhere else the pass is uploaded and the tweet carries a link whose
-  preview renders it.
+- **Post with my ID card.** The pass is uploaded and the tweet carries a link
+  whose preview renders it. Opens X directly — no share sheet in between.
 - **Post without my ID card.** Caption and app link only. Nothing is uploaded
   and the photo never leaves the browser.
 
