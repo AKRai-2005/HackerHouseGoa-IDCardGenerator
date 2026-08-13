@@ -35,11 +35,6 @@ export default function Navbar({ onBack }) {
           encryptedClassName="text-[#F5C518]/60 font-mono"
         />
       </div>
-
-      <div className="flex gap-6 text-sm font-mono text-[#E5DEC9]">
-        <a href="#about" className="hover:text-white transition-colors">About</a>
-        <a href="#schedule" className="hover:text-white transition-colors">Schedule</a>
-      </div>
     </nav>
   );
 }
