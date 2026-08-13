@@ -57,10 +57,15 @@ export default function UploadSection({
       ? 'Change Photo'
       : 'Choose a file or drop it here';
 
-  // Every field has to be filled before the card can leave the browser —
-  // otherwise the placeholder text ships as if it were real detail.
+  // A photo and every field are required before the card can leave the browser
+  // — otherwise the placeholders ship as if they were real detail.
   const FIELDS = { name: 'Name', role: 'Role', from: 'From', team: 'Team' };
-  const missing = Object.keys(FIELDS).filter((key) => !formData[key]?.trim());
+  const missing = [
+    ...(image ? [] : ['Photo']),
+    ...Object.entries(FIELDS)
+      .filter(([key]) => !formData[key]?.trim())
+      .map(([, label]) => label),
+  ];
   const incomplete = missing.length > 0;
 
   return (
@@ -225,7 +230,7 @@ export default function UploadSection({
 
         {incomplete && (
           <p className="text-[11px] font-mono font-bold text-[#E11D48] text-center pt-1">
-            Fill in {missing.map((key) => FIELDS[key]).join(', ')} to continue
+            Add {missing.join(', ')} to continue
           </p>
         )}
       </div>
