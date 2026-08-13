@@ -57,6 +57,12 @@ export default function UploadSection({
       ? 'Change Photo'
       : 'Choose a file or drop it here';
 
+  // Every field has to be filled before the card can leave the browser —
+  // otherwise the placeholder text ships as if it were real detail.
+  const FIELDS = { name: 'Name', role: 'Role', from: 'From', team: 'Team' };
+  const missing = Object.keys(FIELDS).filter((key) => !formData[key]?.trim());
+  const incomplete = missing.length > 0;
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -201,20 +207,27 @@ export default function UploadSection({
       </div>
 
       <div className="pt-4 space-y-2">
-        <button 
+        <button
           onClick={onDownload}
-          className="w-full py-3 px-4 bg-[#0B3B2B] hover:bg-[#082b20] text-[#F5C518] font-mono font-black rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+          disabled={incomplete}
+          className="w-full py-3 px-4 bg-[#0B3B2B] hover:bg-[#082b20] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#0B3B2B] text-[#F5C518] font-mono font-black rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
         >
           <Download size={16} /> DOWNLOAD PASS
         </button>
 
         <button
           onClick={onShare}
-          disabled={sharing}
-          className="w-full py-3 px-4 bg-black hover:bg-zinc-800 disabled:opacity-70 text-white font-mono font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+          disabled={sharing || incomplete}
+          className="w-full py-3 px-4 bg-black hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-black text-white font-mono font-bold rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
         >
           <Share2 size={16} /> {sharing ? 'PREPARING…' : 'SHARE TO X'}
         </button>
+
+        {incomplete && (
+          <p className="text-[11px] font-mono font-bold text-[#E11D48] text-center pt-1">
+            Fill in {missing.map((key) => FIELDS[key]).join(', ')} to continue
+          </p>
+        )}
       </div>
     </div>
   );
